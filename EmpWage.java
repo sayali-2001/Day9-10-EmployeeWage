@@ -3,61 +3,74 @@ package com.bl.employeeWage;
 import java.util.Random;
 
 public class EmpWage {
-    public static final int partTime = 1;
-    public static final int fullTime = 2;
+    public static final int IS_PART_TIME = 1;
+    public static final int IS_FULL_TIME = 2;
 
-    private   String Company;
-    private int RatePerHr;
-    private int workingHrs;
-    int totalEmpWage;
-    private int WorkingDays;
+    public class CompanyEmpWage
+    {
+        public final String company;
+        public final int empRatePerHour;
+        public final int numOfWorkingDays;
+        public final int maxHoursPerMonth;
+        public CompanyEmpWage(String company, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth)
+        {
+            this.company = company;
+            this.empRatePerHour = empRatePerHour;
+            this.numOfWorkingDays = numOfWorkingDays;
+            this.maxHoursPerMonth = maxHoursPerMonth;
+        }
 
-    public EmpWage (String Company, int RatePerHr, int workingHrs,int WorkingDays) {
-
-        this.Company = Company;
-        this.RatePerHr = RatePerHr;
-        this.workingHrs = workingHrs;
-        this.WorkingDays = WorkingDays;
     }
-    public void computeWage(){
+    private int numOfCompany =0;
+    private CompanyEmpWage[] companyEmpWageArray;
+
+    public EmpWage()
+    {
+        companyEmpWageArray = new CompanyEmpWage[5];
+    }
+    private void computeEmpWage()
+    {
+        for (int i = 0; i < numOfCompany; i++)
+        {
+            int totalEmpWage = calculateEmpHrs(companyEmpWageArray[i]);
+            System.out.println("Total Emp Wage for Company " + companyEmpWageArray[i].company + " is : " + totalEmpWage);
+        }
+    }
+    private void addCompanyEmpWage(String company, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth)
+    {
+        companyEmpWageArray[numOfCompany] = new CompanyEmpWage(company, empRatePerHour, numOfWorkingDays, maxHoursPerMonth);
+        numOfCompany++;
+    }
+    private int calculateEmpHrs(CompanyEmpWage companyEmpWage)
+    {
+        //Variables
         int empHrs = 0;
-        int empWage = 0;
-        int totalEmpWage = 0;
         int totalEmpHrs = 0;
-        int day = 0;
-        while (totalEmpHrs <= workingHrs && day < WorkingDays) {
-            double random = Math.floor(Math.random() * 10) %3;
-            switch ((int) random) {
-                case partTime:
-                    empHrs = 4;
-                    break;
-                case fullTime:
+        int totalWorkingDays = 0;
+        //Computation
+        while (totalEmpHrs <= companyEmpWage.maxHoursPerMonth && totalWorkingDays < companyEmpWage.numOfWorkingDays) {
+            totalWorkingDays++;
+            int empCheck = (int) Math.floor(Math.random() * 10) % 3;
+            switch (empCheck) {
+                case IS_FULL_TIME:
                     empHrs = 8;
+                    break;
+                case IS_PART_TIME:
+                    empHrs = 4;
                     break;
                 default:
                     empHrs = 0;
             }
-            empWage = empHrs * RatePerHr;
-            totalEmpWage = totalEmpWage + empWage;
-            totalEmpHrs = totalEmpHrs + empHrs;
-            day++;
+            totalEmpHrs += empHrs;
+            System.out.println("Day : " + totalWorkingDays + " Emp Hrs : " + empHrs);
         }
-        System.out.println("Total Number Of Hours: " + totalEmpHrs);
-        System.out.println("Total Employee Wage: " + totalEmpWage);
+        return totalEmpHrs * companyEmpWage.empRatePerHour;
     }
-    public String toString() {
-        return "Total Emp Wage for Company: " +Company + " is: " + totalEmpWage;
-    }
-    public static void main(String[] args) {
-        System.out.println("Employee Wage of 1st Company");
-        EmpWage e1 = new EmpWage("Airtel", 20, 2, 10);
-
-        System.out.println("Employee Wage of 2nd Company");
-        EmpWage e2 = new EmpWage("Jio", 10, 3,20);
-
-        e1.computeWage();
-        System.out.println(e1);
-        e2.computeWage();
-        System.out.println(e2);
+    public static void main(String args[])
+    {
+        EmpWage empWage = new EmpWage();
+        empWage.addCompanyEmpWage("D-Mart", 20, 20, 100);
+        empWage.addCompanyEmpWage("Amazon", 10, 10, 100);
+        empWage.computeEmpWage();
     }
 }

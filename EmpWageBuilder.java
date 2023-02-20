@@ -31,7 +31,7 @@ public class EmpWageBuilder {
         int totalEmpHr = 0;
         int totalWorkingDay = 0;
         int RatePerHr = 0;
-     
+
         while (totalEmpHr <= c.maxHrPerHour && totalWorkingDay < c.WorkingDays) {
             totalWorkingDay++;
             Random rd = new Random();
